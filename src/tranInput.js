@@ -3,6 +3,8 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 
+import Tranparser from "./util/tranparser";
+
 import "./tranInput.css";
 
 class TranInput extends React.Component {
@@ -16,6 +18,11 @@ class TranInput extends React.Component {
   }
   onRawTranChange(e) {
     this.setState({ rawTran: e.target.value });
+  }
+  testConvert() {
+    const str =
+      "<TRAN_TBL>AB,3,4,6,7,8,9</ TRAN_TBL><ITEM_TBL><ITEM_REC>aa</ ITEM_REC><ITEM_REC>bb</ ITEM_REC></ITEM_TBL>";
+    console.log("object", Tranparser(str));
   }
   render() {
     return (
@@ -32,7 +39,11 @@ class TranInput extends React.Component {
             </div>
           </Grid>
           <Grid item xs={12}>
-            <Button variant="contained" color="primary">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={this.testConvert}
+            >
               登録
             </Button>
           </Grid>
