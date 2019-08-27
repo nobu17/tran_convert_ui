@@ -8,7 +8,11 @@ class TranOutput extends React.Component {
     super(props);
     this.state = {
       rawTran: "bbbbb",
-      convertStr: ""
+      convertStr: "",
+      tranObj: {
+        TRAN_TBL: {},
+        ITEM_TBL: {}
+      }
     };
     this.onRawTranChange = this.onRawTranChange.bind(this);
   }
