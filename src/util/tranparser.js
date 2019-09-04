@@ -1,22 +1,24 @@
 import Xml2Js from "xml-js";
 
-const tranParser = xmlTran => {
-  //root付与
-  const tran = "<root>" + xmlTran + "</root>";
-  const jsonStr = Xml2Js.xml2json(tran, { compact: true, spaces: 4 });
-  console.log("jsonStr", jsonStr);
+const tranParser = {
+  parseTran(xmlTran) {
+    //root付与
+    const tran = "<root>" + xmlTran + "</root>";
+    const jsonStr = Xml2Js.xml2json(tran, { compact: true, spaces: 4 });
+    console.log("jsonStr", jsonStr);
 
-  const obj = JSON.parse(jsonStr).root;
-  console.log("parsedObj", obj);
+    const obj = JSON.parse(jsonStr).root;
+    console.log("parsedObj", obj);
 
-  return {
-    TRAN_TBL: getTranTbl(obj),
-    ITEM_TBL: getItemTbl(obj),
-    POINT_TBL: getPointTbl(obj),
-    MM_TBL: getMmTbl(obj),
-    CREDIT_TBL: getCreditTbl(obj),
-    MEDIA_TBL: getMediaTbl(obj)
-  };
+    return {
+      TRAN_TBL: getTranTbl(obj),
+      ITEM_TBL: getItemTbl(obj),
+      POINT_TBL: getPointTbl(obj),
+      MM_TBL: getMmTbl(obj),
+      CREDIT_TBL: getCreditTbl(obj),
+      MEDIA_TBL: getMediaTbl(obj)
+    };
+  }
 };
 
 function getCreditTbl(obj) {
