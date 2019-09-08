@@ -17,6 +17,7 @@ class TranInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      trimTran: false,
       rawTran: "",
       convertStr: "",
       placeholder:
@@ -29,6 +30,12 @@ class TranInput extends React.Component {
     this.tranConvert = this.tranConvert.bind(this);
     this.openDialog = this.openDialog.bind(this);
     this.dialogColosed = this.dialogColosed.bind(this);
+    this.checkTrimChanged = this.checkTrimChanged.bind(this);
+  }
+  checkTrimChanged(e) {
+    if (e) {
+      this.setState({ trimTran: e.target.checked });
+    }
   }
   onRawTranChange(e) {
     this.setState({ rawTran: e.target.value });
@@ -51,7 +58,7 @@ class TranInput extends React.Component {
       //const str =
       //  "<TRAN_TBL>AB,3,4,6,7,8,9</ TRAN_TBL><ITEM_TBL><ITEM_REC>aa</ ITEM_REC><ITEM_REC>bb</ ITEM_REC></ITEM_TBL>";
       const tranObj = Tranparser.parseTran(this.state.rawTran);
-      console.log("object", tranObj);
+      console.log("tranObj", tranObj);
       if (tranObj.TRAN_TBL) {
         this.props.tranInputted(Tranparser.parseTran(this.state.rawTran));
       } else {
@@ -68,7 +75,7 @@ class TranInput extends React.Component {
           <Grid item xs={12}>
             <div className="textareacontainer">
               <TextareaAutosize
-                rows={7}
+                rowsMax={7}
                 placeholder={this.state.placeholder}
                 value={this.state.rawTran}
                 onChange={this.onRawTranChange}
@@ -85,6 +92,7 @@ class TranInput extends React.Component {
                 変換
               </Button>
             </ButtonGroup>
+            <p>※半角スペースは可視性のため、□で表示されます。</p>
           </Grid>
         </Grid>
         <CommonDialog

@@ -16,6 +16,7 @@ import TableRow from "@material-ui/core/TableRow";
 
 export default class TranExpansion extends React.Component {
   static propTypes = {
+    header: PropTypes.string,
     tranData: PropTypes.array
   };
   constructor(props) {
@@ -42,7 +43,7 @@ export default class TranExpansion extends React.Component {
           aria-controls="panel1a-content"
           expandIcon={<ExpandMoreIcon />}
         >
-          ITEM_TBL
+          {this.props.header}
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Paper style={this.state.style.root}>

@@ -16,6 +16,7 @@ import TableRow from "@material-ui/core/TableRow";
 
 export default class TranHeadExpansion extends React.Component {
   static propTypes = {
+    header: PropTypes.string,
     tranData: PropTypes.array
   };
   getMaxArray(array) {
@@ -28,7 +29,7 @@ export default class TranHeadExpansion extends React.Component {
           aria-controls="panel1a-content"
           expandIcon={<ExpandMoreIcon />}
         >
-          TRAN_TBL
+          {this.props.header}
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Paper

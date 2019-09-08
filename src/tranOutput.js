@@ -9,43 +9,6 @@ class TranOutput extends React.Component {
   static propTypes = {
     tranObj: PropTypes.object
   };
-  constructor(props) {
-    super(props);
-    this.state = {
-      tranObj: {
-        TRAN_TBL: ["a", "b", "caaa", "bbbb", "aaaa"],
-        ITEM_TBL: {
-          ITEM_REC: [
-            ["111", "2222"],
-            [
-              "333",
-              "4444",
-              "5555",
-              "aaaaaaaaa",
-              "bbbbbbbbbbbb",
-              "aaaaaa",
-              "aaaa",
-              "xxxxxxxxx",
-              "aaaaaa",
-              "aaaaaaaaaa",
-              "aaaa",
-              "bbbbbb",
-              "cccccccc",
-              "aaaaaaa",
-              "aaaa",
-              "xxxxxxxxx",
-              "aaaaaa",
-              "aaaaaaaaaa",
-              "aaaa",
-              "bbbbbb",
-              "cccccccc",
-              "aaaaaaa"
-            ]
-          ]
-        }
-      }
-    };
-  }
   render() {
     return (
       <div>
@@ -53,8 +16,11 @@ class TranOutput extends React.Component {
           {(() => {
             if (this.props.tranObj.TRAN_TBL)
               return (
-                <Grid item xs={8} style={{ margin: 10 }}>
-                  <TranHeadExpansion tranData={this.state.tranObj.TRAN_TBL} />
+                <Grid item xs={11} style={{ margin: 10 }}>
+                  <TranHeadExpansion
+                    header={"TRAN_TBL"}
+                    tranData={this.props.tranObj.TRAN_TBL}
+                  />
                 </Grid>
               );
           })()}
@@ -64,8 +30,9 @@ class TranOutput extends React.Component {
               this.props.tranObj.ITEM_TBL.ITEM_REC
             )
               return (
-                <Grid item xs={8} style={{ margin: 10 }}>
+                <Grid item xs={11} style={{ margin: 10 }}>
                   <TranExpansion
+                    header={"ITEM_TBL/ITEM_REC"}
                     tranData={this.props.tranObj.ITEM_TBL.ITEM_REC}
                   />
                 </Grid>
@@ -77,8 +44,9 @@ class TranOutput extends React.Component {
               this.props.tranObj.POINT_TBL.POINT_REC
             )
               return (
-                <Grid item xs={12} style={{ margin: 10 }}>
+                <Grid item xs={11} style={{ margin: 10 }}>
                   <TranExpansion
+                    header={"POINT_TBL/POINT_REC"}
                     tranData={this.props.tranObj.POINT_TBL.POINT_REC}
                   />
                 </Grid>
@@ -87,8 +55,11 @@ class TranOutput extends React.Component {
           {(() => {
             if (this.props.tranObj.MMTBL && this.props.tranObj.MMTBL.MM_REC)
               return (
-                <Grid item xs={12} style={{ margin: 10 }}>
-                  <TranExpansion tranData={this.props.tranObj.MMTBL.MM_REC} />
+                <Grid item xs={11} style={{ margin: 10 }}>
+                  <TranExpansion
+                    header={"MMTBL/MM_REC"}
+                    tranData={this.props.tranObj.MMTBL.MM_REC}
+                  />
                 </Grid>
               );
           })()}
@@ -98,8 +69,9 @@ class TranOutput extends React.Component {
               this.props.tranObj.MEDIA_TBL.MEDIA_REC
             )
               return (
-                <Grid item xs={12} style={{ margin: 10 }}>
+                <Grid item xs={11} style={{ margin: 10 }}>
                   <TranExpansion
+                    header={"MEDIA_TBL/MEDIA_REC"}
                     tranData={this.props.tranObj.MEDIA_TBL.MEDIA_REC}
                   />
                 </Grid>
@@ -111,8 +83,9 @@ class TranOutput extends React.Component {
               this.props.tranObj.CREDIT_TBL.CREDIT_REC
             )
               return (
-                <Grid item xs={12} style={{ margin: 10 }}>
+                <Grid item xs={11} style={{ margin: 10 }}>
                   <TranExpansion
+                    header={"REDIT_TBL/CREDIT_REC"}
                     tranData={this.props.tranObj.CREDIT_TBL.CREDIT_REC}
                   />
                 </Grid>
