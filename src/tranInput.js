@@ -7,6 +7,8 @@ import Grid from "@material-ui/core/Grid";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 
 import Tranparser from "./util/tranparser";
+
+import FileReadButton from "./uiparts/fileReadButton";
 import CommonDialog from "./uiparts/commonDialog";
 import "./tranInput.css";
 
@@ -31,6 +33,8 @@ class TranInput extends React.Component {
     this.openDialog = this.openDialog.bind(this);
     this.dialogColosed = this.dialogColosed.bind(this);
     this.checkTrimChanged = this.checkTrimChanged.bind(this);
+    this.fileRead = this.fileRead.bind(this);
+    this.fileReadFailed = this.fileReadFailed.bind(this);
   }
   checkTrimChanged(e) {
     if (e) {
@@ -39,6 +43,15 @@ class TranInput extends React.Component {
   }
   onRawTranChange(e) {
     this.setState({ rawTran: e.target.value });
+  }
+  fileRead(str) {
+    this.setState({ rawTran: str });
+  }
+  fileReadFailed(err) {
+    this.openDialog(
+      "Error",
+      "ファイルの読み込みに失敗しました。" + err.message
+    );
   }
   openDialog(dialogTitle, dialogMessage) {
     this.setState({
@@ -72,6 +85,13 @@ class TranInput extends React.Component {
     return (
       <div>
         <Grid container>
+          <Grid item xs={12} style={{ margin: 10 }}>
+            <FileReadButton
+              buttonText={"ファイル読込"}
+              fileRead={this.fileRead}
+              fileReadFailed={this.fileReadFailed}
+            />
+          </Grid>
           <Grid item xs={12}>
             <div className="textareacontainer">
               <TextareaAutosize
