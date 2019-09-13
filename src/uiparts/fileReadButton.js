@@ -36,7 +36,7 @@ export default class FileReadButton extends React.Component {
       reader.onerror = function(err) {
         props.fileReadFailed(err);
       };
-      reader.readAsText(input.files[0]);
+      reader.readAsText(input.files[0], "shift-jis");
     }
   }
   render() {
