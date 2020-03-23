@@ -1,6 +1,7 @@
-import React from "react";
-import PropTypes from "prop-types";
-import Button from "@material-ui/core/Button";
+import React from 'react';
+import PropTypes from 'prop-types';
+import Button from '@material-ui/core/Button';
+import Encoding from 'encoding-japanese';
 
 const MaxSize = 2000000;
 
@@ -24,32 +25,52 @@ export default class FileReadButton extends React.Component {
     if (input.files[0]) {
       // サイズチェック
       if (input.files[0].size > MaxSize) {
-        this.props.fileReadFailed(new Error("ファイルサイズが大きすぎます。"));
+        this.props.fileReadFailed(new Error('ファイルサイズが大きすぎます。'));
         return;
       }
       const reader = new FileReader();
       const props = this.props;
       reader.onload = function() {
-        const text = reader.result;
+        // const text = reader.result;
+        // 8ビット符号なし整数値配列と見なす
+        let array = new Uint8Array(reader.result);
+        // 文字コードを取得
+        switch (Encoding.detect(array)) {
+          case 'UTF16':
+            // 16ビット符号なし整数値配列と見なす
+            array = new Uint16Array(e.target.result);
+            break;
+          case 'UTF32':
+            // 32ビット符号なし整数値配列と見なす
+            array = new Uint32Array(e.target.result);
+            break;
+          default:
+            break;
+        }
+
+        // Unicodeの数値配列に変換
+        const unicodeArray = Encoding.convert(array, 'UNICODE');
+        // Unicodeの数値配列を文字列に変換
+        const text = Encoding.codeToString(unicodeArray);
         props.fileRead(text);
       };
       reader.onerror = function(err) {
         props.fileReadFailed(err);
       };
-      reader.readAsText(input.files[0], "shift-jis");
+      reader.readAsArrayBuffer(input.files[0]);
     }
   }
   render() {
     return (
       <div>
         <input
-          style={{ display: "none" }}
+          style={{ display: 'none' }}
           ref={this.inputRef}
-          type="file"
-          accept="txt"
+          type='file'
+          accept='txt'
           onChange={this.onChange}
         />
-        <Button variant="contained" color="primary" onClick={this.clicked}>
+        <Button variant='contained' color='primary' onClick={this.clicked}>
           {this.props.buttonText}
         </Button>
       </div>
