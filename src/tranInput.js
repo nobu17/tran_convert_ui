@@ -1,16 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
 
 import Grid from '@material-ui/core/Grid';
-import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 
-import Tranparser from './util/tranparser';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import FileReadButton from './uiparts/fileReadButton';
 import CommonDialog from './uiparts/commonDialog';
 import './tranInput.css';
+
+import TranInputTextBox from './uiparts/tranInputTextBox';
 
 class TranInput extends React.Component {
   static propTypes = {
@@ -20,40 +21,12 @@ class TranInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      trimTran: false,
-      rawTran: '',
-      convertStr: '',
-      placeholder:
-        '<TRAN_TBL>*,*,*,…</TRAN_TBL>\n<ITEM_TBL><ITEM＿REC>*,*,…<ITEM_REC><ITEM_TBL>\n……\n',
       dialogOpen: false,
       dialogTitle: '',
       dialogMessage: ''
     };
-    this.onRawTranChange = this.onRawTranChange.bind(this);
-    this.tranConvert = this.tranConvert.bind(this);
-    this.comparedTranConvert = this.comparedTranConvert.bind(this);
     this.openDialog = this.openDialog.bind(this);
     this.dialogColosed = this.dialogColosed.bind(this);
-    this.checkTrimChanged = this.checkTrimChanged.bind(this);
-    this.fileRead = this.fileRead.bind(this);
-    this.fileReadFailed = this.fileReadFailed.bind(this);
-  }
-  checkTrimChanged(e) {
-    if (e) {
-      this.setState({ trimTran: e.target.checked });
-    }
-  }
-  onRawTranChange(e) {
-    this.setState({ rawTran: e.target.value });
-  }
-  fileRead(str) {
-    this.setState({ rawTran: str });
-  }
-  fileReadFailed(err) {
-    this.openDialog(
-      'Error',
-      'ファイルの読み込みに失敗しました。' + err.message
-    );
   }
   openDialog(dialogTitle, dialogMessage) {
     this.setState({
@@ -65,75 +38,44 @@ class TranInput extends React.Component {
   dialogColosed(res) {
     this.setState({ dialogOpen: false });
   }
-  tranConvert() {
-    try {
-      this.validateTran();
-      this.props.tranInputted(Tranparser.parseTran(this.state.rawTran));
-    } catch (err) {
-      this.openDialog('エラー', err.message);
-    }
-  }
-  comparedTranConvert() {
-    try {
-      this.validateTran();
-      this.props.comparedTranInputted(Tranparser.parseTran(this.state.rawTran));
-    } catch (err) {
-      this.openDialog('エラー', err.message);
-    }
-  }
-  validateTran() {
-    if (!this.state.rawTran || this.state.rawTran.trim() === '') {
-      throw new Error('入力欄に入力がされていません。');
-    }
-    //const str =
-    //  "<TRAN_TBL>AB,3,4,6,7,8,9</ TRAN_TBL><ITEM_TBL><ITEM_REC>aa</ ITEM_REC><ITEM_REC>bb</ ITEM_REC></ITEM_TBL>";
-    const tranObj = Tranparser.parseTran(this.state.rawTran);
-    console.log('tranObj', tranObj);
-    if (tranObj.TRAN_TBL) {
-      return;
-    } else {
-      throw new Error('変換に失敗しました。入力フォーマットが不正です。');
-    }
-  }
   render() {
     return (
       <div>
         <Grid container>
           <Grid item xs={12} style={{ margin: 10 }}>
-            <FileReadButton
-              buttonText={'ファイル読込'}
-              fileRead={this.fileRead}
-              fileReadFailed={this.fileReadFailed}
-            />
+            <TranInputTextBox
+              tranInputtedSuccess={tran => this.props.tranInputted(tran)}
+              tranInputtedFail={msg => this.openDialog('エラー', msg)}
+            ></TranInputTextBox>
           </Grid>
-          <Grid item xs={12}>
-            <div className='textareacontainer'>
-              <TextareaAutosize
-                rowsMax={7}
-                placeholder={this.state.placeholder}
-                value={this.state.rawTran}
-                onChange={this.onRawTranChange}
-              />
-            </div>
+        </Grid>
+        <Grid container>
+          <Grid itemx xs={12}>
+            <ExpansionPanel>
+              <ExpansionPanelSummary
+                aria-controls='panel1a-content'
+                expandIcon={<ExpandMoreIcon />}
+              >
+                比較用(先に比較元を入力しないと表示されません。)
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Grid container>
+                  <Grid item xs={12} style={{ margin: 10 }}>
+                    <TranInputTextBox
+                      tranInputtedSuccess={tran =>
+                        this.props.comparedTranInputted(tran)
+                      }
+                      tranInputtedFail={msg => this.openDialog('エラー', msg)}
+                    ></TranInputTextBox>
+                  </Grid>
+                </Grid>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
           </Grid>
+        </Grid>
+        <Grid container>
           <Grid item xs={12} style={{ margin: 10 }}>
-            <ButtonGroup aria-label='full width outlined button group'>
-              <Button
-                variant='contained'
-                color='primary'
-                onClick={this.tranConvert}
-              >
-                変換(本体用)
-              </Button>
-              <Button
-                variant='contained'
-                color='secondary'
-                onClick={this.comparedTranConvert}
-              >
-                変換(比較用)
-              </Button>
-            </ButtonGroup>
-            <p>※変換用と比較用で2つのファイルを比較できます。</p>
+            <p>※比較用を入力する事で2つのファイルを比較できます。</p>
             <p>※半角スペースは可視性のため、□で表示されます。</p>
           </Grid>
         </Grid>

@@ -1,16 +1,16 @@
-import Xml2Js from "xml-js";
+import Xml2Js from 'xml-js';
 
-const opt = { isSpaceReplace: true, repaceString: "□" };
+const opt = { isSpaceReplace: true, repaceString: '□' };
 
 const tranParser = {
   parseTran(xmlTran) {
     //root付与
-    const tran = "<root>" + xmlTran + "</root>";
+    const tran = '<root>' + xmlTran + '</root>';
     const jsonStr = Xml2Js.xml2json(tran, { compact: true, spaces: 4 });
-    console.log("jsonStr", jsonStr);
+    // console.log("jsonStr", jsonStr);
 
     const obj = JSON.parse(jsonStr).root;
-    console.log("parsedObj", obj);
+    // console.log("parsedObj", obj);
 
     const res = {
       TRAN_TBL: getTranTbl(obj),
@@ -20,7 +20,7 @@ const tranParser = {
       CREDIT_TBL: { CREDIT_REC: getCreditTbl(obj) },
       MEDIA_TBL: { MEDIA_REC: getMediaTbl(obj) }
     };
-    console.log("result obj", res);
+    // console.log("result obj", res);
     return res;
   }
 };
@@ -62,37 +62,37 @@ function getItemTbl(obj) {
 
 function getTranTbl(obj) {
   if (obj.TRAN_TBL && obj.TRAN_TBL._text) {
-    return getReplaedArrayStr(obj.TRAN_TBL._text.split(","));
+    return getReplaedArrayStr(obj.TRAN_TBL._text.split(','));
   }
   return null;
 }
 
 function getParsedArray(obj) {
-  if (Object.prototype.toString.call(obj) === "[object Array]") {
+  if (Object.prototype.toString.call(obj) === '[object Array]') {
     return getReplaceString(obj);
   }
   // 配列ではないときは配列を作成
-  return [getReplaedArrayStr(obj._text.split(","))];
+  return [getReplaedArrayStr(obj._text.split(','))];
 }
 
 function getReplaceString(obj) {
   if (opt.isSpaceReplace) {
-    return obj.map(str => getReplaedArrayStr(str._text.split(",")));
+    return obj.map(str => getReplaedArrayStr(str._text.split(',')));
   } else {
-    return obj.map(str => getReplaedArrayStr(str._text.split(",")));
+    return obj.map(str => getReplaedArrayStr(str._text.split(',')));
   }
 }
 
 function getReplaedArrayStr(arrayStr) {
   if (opt.isSpaceReplace) {
-    return arrayStr.map(str => replaceAll(str, " ", opt.repaceString));
+    return arrayStr.map(str => replaceAll(str, ' ', opt.repaceString));
   } else {
     return arrayStr;
   }
 }
 
 function replaceAll(str, beforeStr, afterStr) {
-  var reg = new RegExp(beforeStr, "g");
+  var reg = new RegExp(beforeStr, 'g');
   return str.replace(reg, afterStr);
 }
 

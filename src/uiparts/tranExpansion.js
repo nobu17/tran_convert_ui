@@ -27,9 +27,6 @@ export default class TranExpansion extends React.Component {
       }
     };
   }
-  getMaxArray(array) {
-    return array.reduce((a, b) => (a.lenght > b.lenght ? a : b));
-  }
   render() {
     return (
       <ExpansionPanel>
